@@ -206,3 +206,24 @@ func TestBuildRemoteRepoUrl(t *testing.T) {
 		assert.Equal(t, v.expectedRepo, actualRepo)
 	}
 }
+
+func TestGetDockerRepo(t *testing.T) {
+	var imageTags = []struct {
+		in       string
+		expected string
+	}{
+		{"domain:8080/repo-name/hello-world:latest", "repo-name"},
+		{"domain/repo-name/hello-world:latest", "repo-name"},
+		{"domain/repo-name/org-name/hello-world:latest", "repo-name"},
+		{"domain/repo-name/org-name/hello-world", "repo-name"},
+	}
+
+	for _, v := range imageTags {
+		result, err := NewImage(v.in).GetDockerRepo()
+		assert.NoError(t, err)
+		assert.Equal(t, v.expected, result)
+	}
+	// Validate failure upon missing image name
+	_, err := NewImage("domain").GetDockerRepo()
+	assert.Error(t, err)
+}

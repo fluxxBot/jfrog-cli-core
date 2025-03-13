@@ -126,6 +126,18 @@ func (image *Image) GetRegistry() (string, error) {
 	return image.name[:indexOfLastSlash], nil
 }
 
+func (image *Image) GetDockerRepo() (string, error) {
+	longName, err := image.GetImageLongNameWithTag()
+	if err != nil {
+		return "", err
+	}
+	parts := strings.Split(longName, "/")
+	if len(parts) > 1 {
+		return parts[0], nil
+	}
+	return longName, nil
+}
+
 // Returns the physical Artifactory repository name of the pulled/pushed image, by reading a response header from Artifactory.
 func (image *Image) GetRemoteRepo(serviceManager artifactory.ArtifactoryServicesManager) (string, error) {
 	containerRegistryUrl, err := image.GetRegistry()
