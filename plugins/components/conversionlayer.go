@@ -379,9 +379,10 @@ func getActionFunc(cmd Command) cli.ActionFunc {
 
 func ConvertContext(baseContext *cli.Context, flagsToConvert ...Flag) (*Context, error) {
 	pluginContext := &Context{
-		CommandName:      baseContext.Command.Name,
-		Arguments:        baseContext.Args(),
-		PrintCommandHelp: getPrintCommandHelpFunc(baseContext),
+		CommandName:       baseContext.Command.Name,
+		Arguments:         baseContext.Args(),
+		ExecutableCommand: baseContext.Command.Category,
+		PrintCommandHelp:  getPrintCommandHelpFunc(baseContext),
 	}
 
 	if baseContext.Parent() != nil {

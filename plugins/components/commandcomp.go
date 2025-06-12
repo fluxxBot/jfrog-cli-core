@@ -50,12 +50,13 @@ type EnvVar struct {
 type ActionFunc func(c *Context) error
 
 type Context struct {
-	Arguments        []string
-	CommandName      string
-	stringFlags      map[string]string
-	boolFlags        map[string]bool
-	PrintCommandHelp func(commandName string) error
-	ParentContext    *Context
+	Arguments         []string
+	CommandName       string
+	ExecutableCommand string
+	stringFlags       map[string]string
+	boolFlags         map[string]bool
+	PrintCommandHelp  func(commandName string) error
+	ParentContext     *Context
 }
 
 func (c *Context) GetStringFlagValue(flagName string) string {
