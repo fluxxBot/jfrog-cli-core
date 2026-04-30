@@ -2,6 +2,11 @@ package common
 
 import (
 	"errors"
+	"os"
+	"sort"
+	"strconv"
+	"strings"
+
 	commandUtils "github.com/jfrog/jfrog-cli-core/v2/artifactory/commands/utils"
 	artifactoryUtils "github.com/jfrog/jfrog-cli-core/v2/artifactory/utils"
 	"github.com/jfrog/jfrog-cli-core/v2/artifactory/utils/commandsummary"
@@ -12,10 +17,6 @@ import (
 	clientutils "github.com/jfrog/jfrog-client-go/utils"
 	"github.com/jfrog/jfrog-client-go/utils/errorutils"
 	"github.com/jfrog/jfrog-client-go/utils/io/content"
-	"os"
-	"sort"
-	"strconv"
-	"strings"
 
 	"github.com/jfrog/jfrog-cli-core/v2/common/cliutils"
 	"github.com/jfrog/jfrog-cli-core/v2/plugins/components"
@@ -71,7 +72,8 @@ func HandleSecretInput(c *components.Context, stringFlag, stdinFlag string) (sec
 }
 
 func RunCmdWithDeprecationWarning(cmdName, oldSubcommand string, c *components.Context,
-	cmd func(c *components.Context) error) error {
+	cmd func(c *components.Context) error,
+) error {
 	cliutils.LogNonNativeCommandDeprecation(cmdName, oldSubcommand)
 	return cmd(c)
 }
