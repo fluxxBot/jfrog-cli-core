@@ -30,24 +30,21 @@ func CollectMetrics(commandName string, flags []string) {
 	globalMetricsCollector.mu.Lock()
 	defer globalMetricsCollector.mu.Unlock()
 
-	ciSystem := detectCISystem()
-	isCI := ciSystem != ""
+	ec := DetectExecutionContext()
 
 	pkgAliasTool := globalMetricsCollector.packageAliasContext
 	globalMetricsCollector.packageAliasContext = ""
 
 	metricsData := &MetricsData{
-		Flags:        flags,
-		Platform:     runtime.GOOS,
-		Architecture: runtime.GOARCH,
-		IsCI:         isCI,
-		CISystem: func() string {
-			if isCI {
-				return ciSystem
-			}
-			return ""
-		}(),
+		Flags:          flags,
+		Platform:       runtime.GOOS,
+		Architecture:   runtime.GOARCH,
+		IsCI:           ec.IsCI,
+		CISystem:       ec.CISystem,
 		IsContainer:    isRunningInContainer(),
+		IsAgent:        ec.IsAgent,
+		Agent:          ec.Agent,
+		IsInteractive:  ec.IsInteractive,
 		PackageAlias:   pkgAliasTool != "",
 		PackageManager: pkgAliasTool,
 	}
@@ -73,6 +70,9 @@ func GetCollectedMetrics(commandName string) *MetricsData {
 		IsCI:           metrics.IsCI,
 		CISystem:       metrics.CISystem,
 		IsContainer:    metrics.IsContainer,
+		IsAgent:        metrics.IsAgent,
+		Agent:          metrics.Agent,
+		IsInteractive:  metrics.IsInteractive,
 		PackageAlias:   metrics.PackageAlias,
 		PackageManager: metrics.PackageManager,
 	}
